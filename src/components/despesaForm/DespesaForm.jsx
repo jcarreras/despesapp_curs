@@ -2,29 +2,35 @@ import { useState } from 'react';
 import './DespesaForm.css'
 
 export default function DespesaForm({ afegirDespesa }) {
+
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
-  const [pagatPer, setPagatPer] = useState("");
+  const [pagatPer, setPagatPer] = useState("joan");
+
   const resetForm = () => {
     setConcepte("");
     setQuantia("");
     setPagatPer("");
   }
-  const inserirDespesa = (e) => {
+
+  const handleSubmit = (e) => {
     e.preventDefault();
+
     const despesa = {
       concepte: concepte,
       quantia: quantia,
       pagatPer: pagatPer,
-      id: Math.floor(Math.random() * 1000)
+      //id: Math.floor(Math.random() * 1000)
     }
-    console.log(despesa);
+
+    // console.log(despesa);
+
     afegirDespesa(despesa);
     resetForm();
   };
 
   return (
-    <form className='despesa-form' onSubmit={inserirDespesa}>
+    <form className='despesa-form' onSubmit={handleSubmit}>
         <label>
             <span>Concepte</span>
             <input type="text" onChange={(e) => setConcepte(e.target.value)} value={concepte} />

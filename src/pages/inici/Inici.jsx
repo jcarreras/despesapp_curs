@@ -9,65 +9,29 @@ import { useCollection } from '../../hooks/useCollection';
 
 export default function Inici() {
     const [mostraModal, setMostraModal] = useState(false);
-    //const [despeses, setDespeses] = useState(null);
-
     const { documents: despeses } = useCollection('despeses');
-
-    // useEffect(() => {
-    //     const unsubscribe = onGetCollection("despeses", (querySnapshot) => {
-    //         let resultats = [];
-
-    //         querySnapshot.forEach((doc) => {
-    //             resultats.push({ ...doc.data(), id: doc.id });
-    //         });
-
-    //         console.log(resultats);
-    //         setDespeses(resultats);
-    //     });
-    //     return () => unsubscribe();
-    // }, []);
-
     const afegirDespesa = (despesa) => {
         saveDespesa(despesa)
-                .then((idDespesa) => {
-                    despesa.id = idDespesa;
-
-                    if (!despesesPrevies) {
-                        return [despesa];
-                    } else {
-                        return [...despesesPrevies, despesa];
-                    }
-                })
-        // setDespeses((despesesPrevies) => {
-
-        //     saveDespesa(despesa)
-        //         .then((idDespesa) => {
-        //             despesa.id = idDespesa;
-
-        //             if (!despesesPrevies) {
-        //                 return [despesa];
-        //             } else {
-        //                 return [...despesesPrevies, despesa];
-        //             }
-        //         })
-        // }
-        // );
-        // setMostraModal(false);
+            .then((idDespesa) => {
+                console.log(`Despesa afegida amb id: ${idDespesa}`);
+                despesa.id = idDespesa;
+            })
+            .catch((error) => {
+                console.error("Error afegint la despesa:", error);
+            })
+            .finally(() => {
+                setMostraModal(false); // Tanca el modal, independentment del resultat
+            });
     };
 
     const eliminarDespesa = (id) => {
         deleteDespesa(id)
-                .then(() => {
-                    return despesesPrevies.filter((despesa) => id !== despesa.id)
-                })
-        // setDespeses((despesesPrevies) => {
-
-        //     deleteDespesa(id)
-        //         .then(() => {
-        //             return despesesPrevies.filter((despesa) => id !== despesa.id)
-        //         })
-
-        // })
+            .then(() => {
+                console.log(`Despesa amb id ${id} eliminada correctament`);
+            })
+            .catch((error) => {
+                console.error("Error eliminant la despesa:", error);
+            });
     }
 
     const handleTancar = () => {

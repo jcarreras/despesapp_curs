@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import './Navbar.css'
-import { logoutUser } from "../../firebase/firebase";
+import { logoutUser, isUserLoggedIn } from "../../firebase/firebase";
 import { useEffect, useState } from "react";
 
 export default function Navbar() {
@@ -14,19 +14,27 @@ export default function Navbar() {
         setUserLoggedIn(false)
         //nagigate /home
       );
-  }
+  };
 
-  useEffect(()=>{
-    //Cridar mètode per comprovar si usuari loguejat (isUserLoggedIn)
+ 
+  useEffect(()=> {
+      isUserLoggedIn((user)=>{
+        if(user){
+          // console.log(user.uid);
+          // console.log(user.email);
+          setUserLoggedIn(true);
+        }
+          
+      })
   }, []);
-
 
   return (
     <nav className="navbar">
         <ul>
-        <li className="titol"><Link to="/">Despesapp</Link></li>
-        <li><Link to="/">Inici</Link></li>
-
+        <li className="titol"><Link to="/">Benvingut a la meva App de despeses</Link></li>
+        <li><Link to="/">Projectes</Link></li>
+        <li><Link to="/gestioparticipants">Participants</Link></li>
+        <li><Link to="/gestiodespeses">Despeses</Link></li>
         {!userLoggedIn &&
           (
             <>
@@ -38,7 +46,10 @@ export default function Navbar() {
         
         {userLoggedIn &&
           (
-            <li><Link onClick={ ()=> logout()}>Tancar sessió</Link></li>
+            <>
+              <li><Link to="/register">Registrar-se</Link></li>
+              <li><Link onClick={ ()=> logout()}>Tancar sessió</Link></li>
+            </>
           )
         }
         </ul>

@@ -1,0 +1,16 @@
+.inici-container {
+    display: grid;
+    max-width: 900px;
+    margin: 60px auto;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 20px 2px;
+  }
+
+  .inici-content {
+    margin: 60px auto;
+    justify-content: left;
+    align-items: left;
+    padding-right: 30px;
+  }

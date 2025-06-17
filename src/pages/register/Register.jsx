@@ -1,105 +1,115 @@
-import React, { useState } from "react";
-import "./Register.css";
+// register.jsx
+import { useState } from "react";
 import { registerUser, saveCollection } from "../../firebase/firebase";
+import { useNavigate } from "react-router-dom";
+import "./Register.css";
 
 export default function Register() {
-  const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
+  const [email, setEmail]       = useState("");
+  const [name, setName]         = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError]       = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    setError("");
-    
-    if (password !== confirmPassword) {
-      alert("Les contrasenyes no coincideixen!");
-      return;
-    }
-    console.log("Email:", email);
-    console.log("Nom:", name);
-    console.log("Contrasenya:", password);
-    
-    // Enviar les dades a Firebase
-    const res = await registerUser(email, password);
-
-    if(res.code == undefined){
+    try {
+      if (password !== confirmPassword) {
+        alert("Les contrasenyes no coincideixen!");
+        return;
+      }
+      const res = await registerUser(email, password);
+      if(res.code == undefined){
         console.log(res.user.uid);
         saveCollection("participants", {uid: res.user.uid, email, name})
             .then((user)=>{
                 console.log(user);
                 console.log("Usuari registrat correctament");
-                
             });
-    } else {
-        setError(res.message);
+        navigate("/");
+      } else {
+        setError("Hi ha hagut un error, el més segur és que l'usuari ja existeixi, torna-ho a provar!", res.message);
+        setEmail("");
+        setName("");
+        setPassword("");
+        setConfirmPassword("");
+      }
+      
+    } catch (err) {
+      setError("Error al registrar-se");
     }
   };
-
   return (
     <div className="register-container">
       <div className="register-form">
         <h1 className="register-title">Registra't</h1>
-        {error && <p className="error-message">{error}</p>} {/* Missatge d'error */}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleRegister}>
           <div className="form-group">
-            <label htmlFor="email" className="form-label">
-              Correu electrònic
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="form-input"
-              required
-            />
+             <label htmlFor="name" className="form-label">
+               Nom
+             </label>
+             <input
+               type="text"
+               placeholder="Nom de l'usuari"
+               id="name"
+               value={name}
+               onChange={(e) => setName(e.target.value)}
+               className="form-input"
+               required
+             />
           </div>
+          <br/>
           <div className="form-group">
-            <label htmlFor="name" className="form-label">
-              Nom
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="form-input"
-              required
-            />
+             <label htmlFor="email" className="form-label">
+               Correu electrònic
+             </label>
+             <input
+               type="email"
+               placeholder="Correu electrònic"
+               id="email"
+               value={email}
+               onChange={(e) => setEmail(e.target.value)}
+               className="form-input"
+               required
+             />
           </div>
+          <br/>
           <div className="form-group">
-            <label htmlFor="password" className="form-label">
-              Contrasenya
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="form-input"
-              required
-            />
+             <label htmlFor="password" className="form-label">
+               Contrasenya
+             </label>
+             <input
+               type="password"
+               placeholder="Contrasenya"
+               id="password"
+               value={password}
+               onChange={(e) => setPassword(e.target.value)}
+               className="form-input"
+               required
+             />
           </div>
+          <br/>           
           <div className="form-group">
-            <label htmlFor="confirmPassword" className="form-label">
-              Confirma la contrasenya
-            </label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="form-input"
-              required
-            />
+             <label htmlFor="confirmPassword" className="form-label">
+               Confirmi la contrasenyaauth,
+             </label>
+             <input
+               type="password"
+               placeholder="Repeteix la contrasenya"
+               id="confirmPassword"
+               value={confirmPassword}
+               onChange={(e) => setConfirmPassword(e.target.value)}
+               className="form-input"
+               required
+             />
           </div>
           <button type="submit" className="form-button">
-            Registra't
+             Registra't
           </button>
+          {error && <p className="error-message">{error}</p>}
         </form>
-      </div>
-    </div>
+       </div>
+     </div>
   );
-}
+};

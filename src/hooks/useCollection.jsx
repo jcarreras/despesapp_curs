@@ -2,9 +2,7 @@ import { useState, useEffect } from "react"
 import { onGetCollection } from "../firebase/firebase"
 
 export const useCollection = (collectionName)=>{
-
     const [documents, setDocuments] = useState(null);
-
     useEffect(()=>{
         const unsubscribe = onGetCollection(collectionName, (querySnapshot) => {
             let resultats = [];
@@ -15,6 +13,5 @@ export const useCollection = (collectionName)=>{
         });
         return ()=>unsubscribe();
     }, [collectionName]);
-
     return {documents};
 }

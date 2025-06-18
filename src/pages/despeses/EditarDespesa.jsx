@@ -52,9 +52,11 @@ export default function EditarDespesa() {
       const p = await RetornaInfoDespesa(id); // p és un objecte, no un snap
       if (p) {
         setConcepte(p.concepte);
-        setQuantia(p.quantia);
+        // setQuantia(p.quantia);
+        setQuantia(String(p.quantia));
         setPagatPer(p.pagatPer);
-        setDividirEntre(p.dividirEntre);
+        // setDividirEntre(p.dividirEntre);
+        setDividirEntre(Array.isArray(p.dividirEntre) ? p.dividirEntre.map(String):[]);
         setUid(p.uid);
         setCarregant(false);
       }
@@ -73,7 +75,7 @@ export default function EditarDespesa() {
       concepte:concepte,
       quantia:quantia,
       pagatPer: pagatPer,
-      dividirEntre:dividirEntre
+      dividirEntre: Array.isArray(dividirEntre) ? dividirEntre : [],
     };
     await updateCollection("despeses", id, updateDespesa);
     alert("Despesa actualitzada");
@@ -86,7 +88,7 @@ export default function EditarDespesa() {
   return (
     <div className="register-container">
       <div className="register-form">
-        <h1 className="register-title">Hola, {nomusuari}. Edita la Despesa {nom}</h1>
+        <h1 className="register-title">Hola, {nomusuari}. Edita la Despesa {concepte}</h1>
         <form onSubmit={handleDespesa}>
           <div className="form-group">
             <label>
@@ -139,7 +141,7 @@ export default function EditarDespesa() {
                 {participants.length === 0 && (
                   <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
                 )}
-                <select value={dividirEntre}multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
+                <select value={dividirEntre} multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
                   const selected = Array.from(e.target.selectedOptions, option => option.value);
                   setDividirEntre(selected);
                 }}>

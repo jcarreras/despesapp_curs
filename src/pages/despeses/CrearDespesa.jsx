@@ -52,9 +52,10 @@ export default function CrearDespesa() {
 
     const despesa = {
         concepte: concepte,
-        quantitat: quantia,
+        quantia: quantia,
         pagatPer: pagatPer,
-        dividirEntre: dividirEntre,
+        // dividirEntre: dividirEntre,
+        dividirEntre: Array.isArray(dividirEntre) ? dividirEntre : [],
         uid: crypto.randomUUID(),
     };
     await afegirDespesa(despesa);

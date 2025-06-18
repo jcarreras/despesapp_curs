@@ -1,19 +1,28 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { saveCollection, isUserLoggedIn, RetornaParticipants, RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
+import { RetornaInfoDespesa, saveCollection, isUserLoggedIn, RetornaParticipants, RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
 import './Despeses.css';
 
 export default function EditarDespesa() {
   const { id } = useParams(); 
-  const [participants, setParticipants] = useState([]);
-  const [nomusuari, setNomUsuari] = useState("");
-  const [concepte, setConcepte] = useState("");
-  const [quantia, setQuantia] = useState("");
-  const [pagatPer, setPagatPer] = useState("");
-  const [dividirEntre, setDividirEntre]= useState([]);
-  const [carregant, setCarregant] = useState(true);
+  const [nomusuari, setNomUsuari]  = useState("");
+  const [concepte, setConcepte]    = useState("");
+  const [quantia, setQuantia]      = useState("");
+  const [pagatPer, setPagatPer]    = useState("");
+  const [uid, setUid]              = useState("");
+  const [dividirEntre, setDividirEntre] = useState([]);
+  const [participants, setParticipants] = useState([]);  
+  const [carregant, setCarregant]  = useState(true);
   const navigate = useNavigate();
   const usuari   = getCurrentUser();
+
+  const resetForm = () => {
+    setConcepte("");
+    setQuantia("");
+    setPagatPer("");
+    setDividirEntre([]);
+    setUid("");
+  }
 
   useEffect(() => {
       const obtenirNom = async () => {
@@ -23,21 +32,40 @@ export default function EditarDespesa() {
         }
       };
       obtenirNom();
-    }, [usuari]);
+  }, [usuari]);
 
   useEffect(() => {
-    const carregarParticipant = async () => {
-      const p = await RetornaInfoParticipant(id); // p és un objecte, no un snap
+    const unsubscribe = isUserLoggedIn(async () => {
+      if (usuari) { // Usuari autenticat, carreguem els seus projectes
+        await fetchParticipants();
+      } else {        // No autenticat, redirigir al login
+        navigate("/login");
+        return;
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
+
+  useEffect(() => {
+    const carregarDespesa = async () => {
+      const p = await RetornaInfoDespesa(id); // p és un objecte, no un snap
       if (p) {
-        setNom(p.name);
-        setEmail(p.email);
+        setConcepte(p.concepte);
+        setQuantia(p.quantia);
+        setPagatPer(p.pagatPer);
+        setDividirEntre(p.dividirEntre);
         setUid(p.uid);
         setCarregant(false);
       }
     };
-    if (id) carregarParticipant();
+    if (id) carregarDespesa();
   }, [id]);
 
+  const fetchParticipants = async () => {
+    const results = await RetornaParticipants();
+    setParticipants(results);
+  };
+  
   const handleParticipant = async (e) =>{
     e.preventDefault();
     const updateParticipant={

@@ -106,6 +106,16 @@ export const RetornaDespeses = async ()=>{
   const results = snapshot.docs.map(doc => ({id: doc.id,...doc.data(),}));
   return results;
 };
+export const RetornaInfoDespesa=async (id)=>{
+  const ref = doc(db, "despeses", id);
+  const snap = await getDoc(ref);
+  if (snap.exists()) {
+    return snap.data();
+  }else{
+    return "";
+  }
+};
+
 // Funcions d'autenticació
 export const registerUser = async (email, password) => {
   try {

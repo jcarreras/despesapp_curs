@@ -4,23 +4,16 @@ import { RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCo
 
 
 export default function EditarDespesa() {
+  const { id } = useParams(); 
   const [participants, setParticipants] = useState([]);
   const [nomusuari, setNomUsuari] = useState("");
   const [concepte, setConcepte] = useState("");
   const [quantia, setQuantia] = useState("");
   const [pagatPer, setPagatPer] = useState("");
   const [dividirEntre, setDividirEntre]= useState([]);
-  
-  const navigate = useNavigate();
-  const usuari   = getCurrentUser();
-  const { id } = useParams(); // Document on hi ha la despesa
-  const navigate = useNavigate();
-  const usuari   = getCurrentUser();
-  const [nomusuari, setNomUsuari] = useState("");
   const [carregant, setCarregant] = useState(true);
-  const [nom, setNom]             = useState("");
-  const [email, setEmail]         = useState([]);
-  const [uid, setUid]             = useState("");
+  const navigate = useNavigate();
+  const usuari   = getCurrentUser();
 
   useEffect(() => {
       const obtenirNom = async () => {

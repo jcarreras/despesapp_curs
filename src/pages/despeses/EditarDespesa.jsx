@@ -121,35 +121,36 @@ export default function EditarDespesa() {
           <div className="form-group">           
             <label>
                 <span>Pagat per: </span>
+                {participants.length === 0 && (
+                  <p>No hi ha cap participant. Crea'n un abans d'indicar qui ha pagat!</p>
+                )}
                 <select value={pagatPer} id = "pagatPer" name="pagatPer" onChange={(e) => {setPagatPer(e.target.value)}}>
-                {participants.length === 0 ? (
-                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
-                ) : (
-                    participants.map(participant => (
+                {participants.map(participant => (
                         <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
                     ))
-                )}
+                }
                 </select>
             </label>
-          </div> 
+          </div>           
           <br/>
           <div className="form-group">    
            <label>         
-                <span>Dividit entre: </span>  
-                <select value={dividirEntre} multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
+                <span>Dividit entre: </span> 
+                {participants.length === 0 && (
+                  <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
+                )}
+                <select value={dividirEntre}multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
                   const selected = Array.from(e.target.selectedOptions, option => option.value);
                   setDividirEntre(selected);
                 }}>
-                {participants.length === 0 ? (
-                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
-                ) : (
-                    participants.map(participant => (
-                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
-                    ))
-                )}
+                  {participants.map(participant => (
+                    <option key={participant.id} value={participant.uid}>
+                      {participant.name}, {participant.email}
+                    </option>
+                  ))}
                 </select>
             </label>
-          </div>
+          </div>          
           <br/>
           <div className="form-group">
              <label htmlFor="email" className="form-label">

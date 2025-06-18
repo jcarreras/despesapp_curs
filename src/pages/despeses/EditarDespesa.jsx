@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
-
+import { saveCollection, isUserLoggedIn, RetornaParticipants, RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
+import './Despeses.css';
 
 export default function EditarDespesa() {
   const { id } = useParams(); 

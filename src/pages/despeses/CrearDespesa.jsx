@@ -110,7 +110,7 @@ export default function CrearDespesa() {
                      <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
                 ) : (
                     participants.map(participant => (
-                        <option key={participant.id} value={participant.id}>{participant.name}, {participant.email}</option>
+                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
                     ))
                 )}
                 </select>
@@ -119,12 +119,15 @@ export default function CrearDespesa() {
           <div className="form-group">    
            <label>         
                 <span>Dividit entre: </span>  
-                <select id = "dividitEntre" name="dividitEntre" multiple onChange={(e) => {setDividirEntre(e.target.value)}}>
+                <select multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
+                  const selected = Array.from(e.target.selectedOptions, option => option.value);
+                  setDividirEntre(selected);
+                }}>
                 {participants.length === 0 ? (
                      <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
                 ) : (
                     participants.map(participant => (
-                        <option key={participant.id} value={participant.id}>{participant.name}, {participant.email}</option>
+                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
                     ))
                 )}
                 </select>

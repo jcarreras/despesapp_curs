@@ -118,18 +118,19 @@ export default function CrearDespesa() {
           </div>   
           <div className="form-group">    
            <label>         
-                <span>Dividit entre: </span>  
+                <span>Dividit entre: </span> 
+                {participants.length === 0 && (
+                  <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
+                )}
                 <select multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
                   const selected = Array.from(e.target.selectedOptions, option => option.value);
                   setDividirEntre(selected);
                 }}>
-                {participants.length === 0 ? (
-                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
-                ) : (
-                    participants.map(participant => (
-                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
-                    ))
-                )}
+                  {participants.map(participant => (
+                    <option key={participant.id} value={participant.uid}>
+                      {participant.name}, {participant.email}
+                    </option>
+                  ))}
                 </select>
             </label>
           </div>

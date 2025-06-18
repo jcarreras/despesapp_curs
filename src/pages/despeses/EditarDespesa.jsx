@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { RetornaInfoDespesa, saveCollection, isUserLoggedIn, RetornaParticipants, RetornaInfoParticipant, RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
+import { RetornaInfoDespesa, isUserLoggedIn, RetornaParticipants, 
+  RetornaNomParticipant, getCurrentUser, updateCollection} from "../../firebase/firebase";
 import './Despeses.css';
 
 export default function EditarDespesa() {
@@ -65,16 +66,18 @@ export default function EditarDespesa() {
     const results = await RetornaParticipants();
     setParticipants(results);
   };
-  
-  const handleParticipant = async (e) =>{
+
+  const handleDespesa = async (e) =>{
     e.preventDefault();
-    const updateParticipant={
-      name:nom,
-      email:email
+    const updateDespesa={
+      concepte:concepte,
+      quantia:quantia,
+      pagatPer: pagatPer,
+      dividirEntre:dividirEntre
     };
-    await updateCollection("participants", id, updateParticipant);
-    alert("Particpant actualitzat");
-    navigate("/gestioparticipants");
+    await updateCollection("despeses", id, updateDespesa);
+    alert("Despesa actualitzada");
+    navigate("/gestiodespeses");
   };
 
   
@@ -83,37 +86,71 @@ export default function EditarDespesa() {
   return (
     <div className="register-container">
       <div className="register-form">
-        <h1 className="register-title">Hola, {nomusuari}. Edita el Participant {nom}</h1>
-        <form onSubmit={handleParticipant}>
+        <h1 className="register-title">Hola, {nomusuari}. Edita la Despesa {nom}</h1>
+        <form onSubmit={handleDespesa}>
           <div className="form-group">
-             <label htmlFor="name" className="form-label">
-               Nom
-             </label>
-             <input
-               type="text"
-               placeholder="Nom de l'usuari"
-               id="name"
-               value={nom}
-               onChange={(e) => setNom(e.target.value)}
-               className="form-input"
-               required
-             />
+            <label>
+                <span>Concepte</span>
+                <input 
+                    type="text" 
+                    id="concepte"
+                    placeholder="Concepte de la despesa"
+                    onChange={(e) => setConcepte(e.target.value)} 
+                    value={concepte} 
+                    className="form-input"
+                    required
+                />
+            </label>
           </div>
           <br/>
           <div className="form-group">
-             <label htmlFor="email" className="form-label">
-               Correu electrònic
-             </label>
-             <input
-               type="email"
-               placeholder="Correu electrònic"
-               id="email"
-               value={email}
-               onChange={(e) => setEmail(e.target.value)}
-               className="form-input"
-               required
-             />
-          </div>  
+            <label>
+                <span>Quantia</span>
+                <input 
+                    type="text" 
+                    id="quantia"
+                    placeholder="cost de la despesa"                    
+                    onChange={(e) => setQuantia(e.target.value)} 
+                    value={quantia} 
+                    className="form-input"
+                    required
+                />
+            </label>
+          </div>
+          <br/>
+          <div className="form-group">           
+            <label>
+                <span>Pagat per: </span>
+                <select value={pagatPer} id = "pagatPer" name="pagatPer" onChange={(e) => {setPagatPer(e.target.value)}}>
+                {participants.length === 0 ? (
+                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
+                ) : (
+                    participants.map(participant => (
+                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
+                    ))
+                )}
+                </select>
+            </label>
+          </div> 
+          <br/>
+          <div className="form-group">    
+           <label>         
+                <span>Dividit entre: </span>  
+                <select value={dividirEntre} multiple id = "dividitEntre" name="dividitEntre" onChange={(e) => {
+                  const selected = Array.from(e.target.selectedOptions, option => option.value);
+                  setDividirEntre(selected);
+                }}>
+                {participants.length === 0 ? (
+                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
+                ) : (
+                    participants.map(participant => (
+                        <option key={participant.id} value={participant.uid}>{participant.name}, {participant.email}</option>
+                    ))
+                )}
+                </select>
+            </label>
+          </div>
+          <br/>
           <div className="form-group">
              <label htmlFor="email" className="form-label">
                UID del participant: {uid}

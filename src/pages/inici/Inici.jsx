@@ -79,6 +79,10 @@ export default function Inici() {
          <button> Crear nou participant no registrat</button>
        </Link>
         <br />
+        <Link to={`/creardespesa`}>
+         <button> Crear una nova despesa</button>
+       </Link>
+        <br />
        <div>
           <button onClick={handleSignOut}>Tancar sessió</button>
        </div>

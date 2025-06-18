@@ -57,15 +57,14 @@ export default function CrearDespesa() {
         dividirEntre: dividirEntre,
         uid: crypto.randomUUID(),
     };
-
     await afegirDespesa(despesa);
     resetForm();
-};
-const afegirDespesa = async (despesa) => {
-    const docRef = saveCollection("despeses", despesa);
-    alert("Despesa afegida");
-    navigate("/gestiodespeses");
- };
+  };
+  const afegirDespesa = async (despesa) => {
+      const docRef = saveCollection("despeses", despesa);
+      alert("Despesa afegida");
+      navigate("/gestiodespeses");
+  };
 
   return (
 
@@ -106,7 +105,15 @@ const afegirDespesa = async (despesa) => {
           <div className="form-group">           
             <label>
                 <span>Pagat per: </span>
-                <span>{nomusuari}</span>
+                <select id = "pagatPer" name="pagatPer" onChange={(e) => {setPagatPer(e.target.value)}}>
+                {participants.length === 0 ? (
+                     <p>No hi ha cap participant. Crea'n un abans de dividir les despeses!</p>
+                ) : (
+                    participants.map(participant => (
+                        <option key={participant.id} value={participant.id}>{participant.name}, {participant.email}</option>
+                    ))
+                )}
+                </select>
             </label>
           </div>   
           <div className="form-group">    
